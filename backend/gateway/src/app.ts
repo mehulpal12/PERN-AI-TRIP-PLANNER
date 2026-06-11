@@ -13,7 +13,7 @@ const USER_SERVICE_URL = process.env.USER_SERVICE_URL || "http://127.0.0.1:4000"
 const TRIP_SERVICE_URL = process.env.TRIP_SERVICE_URL || "http://127.0.0.1:4001";
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || "http://127.0.0.1:4002";
 
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
 app.use(morgan("dev"));
 

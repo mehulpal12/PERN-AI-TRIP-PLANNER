@@ -4,6 +4,6 @@ import cors from "cors";
 export const securityHeaders = helmet();
 
 export const corsMiddleware = cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  origin: true, // Dynamically reflect request origin
   credentials: true,
 });

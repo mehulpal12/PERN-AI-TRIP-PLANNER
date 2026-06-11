@@ -7,7 +7,7 @@ import { serverAdapter } from "./config/bull-board.js";
 const app = express();
 
 // Global Middleware Setup
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
 app.use(express.json());
 
