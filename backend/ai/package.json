@@ -1,0 +1,53 @@
+{
+  "name": "ai",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+"scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "start": "node dist/index.js",
+    "worker": "node dist/worker-runner.js",
+    "worker:dev": "tsx src/worker-runner.ts",
+    "dev:all": "concurrently -n \"API,WORKER\" -c \"cyan,magenta\" \"npm run dev\" \"npm run worker:dev\"",
+    "start:all": "concurrently -n \"API,WORKER\" -c \"cyan,magenta\" \"npm run start\" \"npm run worker\""
+},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@bull-board/api": "^7.2.1",
+    "@bull-board/express": "^7.2.1",
+    "@google/genai": "^2.6.0",
+    "axios": "^1.17.0",
+    "bullmq": "^5.78.0",
+    "cors": "^2.8.6",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.2.0",
+    "ioredis": "^5.11.1",
+    "openai": "^6.39.0",
+    "redis": "^6.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/ioredis": "^4.28.10",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.9.1",
+    "@types/supertest": "^7.2.0",
+    "concurrently": "^10.0.3",
+    "jest": "^30.4.2",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3"
+  }
+}

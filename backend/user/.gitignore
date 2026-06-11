@@ -1,0 +1,14 @@
+    node_modules
+    .env
+    output.txt
+    node_modules
+    .env
+    output.txt
+node_modules
+/dist
+
+node_modules/
+dist/
+build/
+.env
+*.log
