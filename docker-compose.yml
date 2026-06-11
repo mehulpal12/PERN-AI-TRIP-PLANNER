@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ./backend/gateway
+    ports:
+      - "5000:5000" # 🎯 This remains exposed because the frontend/client talks directly to it
+    env_file: ./backend/gateway/.env
+    networks:
+      - trip_planner_network
+
+  user:
+    build:
+      context: ./backend/user
+    # 🔒 OPTIMIZATION: Removed 'ports' mapping. The gateway can still access this at http://user:4000
+    env_file: ./backend/user/.env
+    networks:
+      - trip_planner_network
+
+  trip:
+    build:
+      context: ./backend/trip
+    # 🔒 OPTIMIZATION: Removed 'ports' mapping. Other services access this internally at http://trip:4001
+    env_file: ./backend/trip/.env
+    networks:
+      - trip_planner_network
+
+  ai:
+    build:
+      context: ./backend/ai
+    # 🔒 OPTIMIZATION: Removed 'ports' mapping. Accessed internally via gateway at http://ai:4002
+    env_file: ./backend/ai/.env
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379
+      # 🛠️ FIX: Forces Axios/internal clients to hit the trip container rather than localhost
+      TRIP_SERVICE_URL: http://trip:4001
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - trip_planner_network
+
+  ai-worker:
+    build:
+      context: ./backend/ai
+    command: npm run worker
+    env_file: ./backend/ai/.env
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379
+      # 🛠️ FIX: Ensuring the background workers also point to the correct internal container URL
+      TRIP_SERVICE_URL: http://trip:4001
+    depends_on:
+      redis:
+        condition: service_healthy
+      ai:
+        condition: service_started
+    networks:
+      - trip_planner_network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    restart: unless-stopped
+    # 🔒 OPTIMIZATION: Removed 'ports'. Redis is isolated inside the Docker network safely.
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - trip_planner_network
+
+volumes:
+  redis_data:
+
+networks:
+  trip_planner_network:
+    driver: bridge
