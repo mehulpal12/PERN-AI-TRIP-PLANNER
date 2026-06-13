@@ -188,4 +188,5 @@ GitHub Actions automates:
 
 GitHub: https://github.com/your-github-username
 
-LinkedIn: https://linkedin.com/in/your-linkedin-profile
+LinkedIn: https://www.linkedin.com/in/mehul-pal-3ab6891b2/
+
